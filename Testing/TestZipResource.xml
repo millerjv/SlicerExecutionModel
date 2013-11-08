@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Testing</category>
+  <title>Resources within CLI bundle</title>
+  <index>0</index>
+  <description><![CDATA[Testing CLI as a zip bundle (exe followed by a zip file). Zip file can be accessed as argv[0]. Zip file is meant to contain resources needed by the CLI.\n\n]]></description>
+  <version>0.1.0.$Revision$(alpha)</version>
+  <documentation-url></documentation-url>
+  <license/>
+  <contributor>Jim Miller (GE)</contributor>
+  <acknowledgements><![CDATA[This module was developed by Jim Miller at GE Research with contributions from Mike Halle at Brigham and Women's Hospital.\n\nThis work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149.]]></acknowledgements>
+  <parameters advanced="false">
+    <label>Parameters</label>
+    <description><![CDATA[A parameter block for the test]]></description>
+    <integer>
+      <name>anInteger</name>
+      <longflag>anInteger</longflag>
+      <description><![CDATA[A simple integer based flag]]></description>
+      <label>An integer</label>
+      <default>0</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>5</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+  </parameters>
+</executable>

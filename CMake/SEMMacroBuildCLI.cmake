@@ -18,6 +18,7 @@ macro(SEMMacroBuildCLI)
     CLI_XML_FILE
     CLI_LIBRARY_WRAPPER_CXX
     CLI_SHARED_LIBRARY_WRAPPER_CXX # Deprecated
+    CLI_RESOURCE_ZIP
     RUNTIME_OUTPUT_DIRECTORY
     LIBRARY_OUTPUT_DIRECTORY
     ARCHIVE_OUTPUT_DIRECTORY
@@ -95,6 +96,11 @@ macro(SEMMacroBuildCLI)
     endif()
   endif()
 
+  if(DEFINED LOCAL_SEM_CLI_RESOURCE_ZIP AND NOT EXISTS ${LOCAL_SEM_CLI_RESOURCE_ZIP})
+     message(FATAL_ERROR "Requested zip file [${LOCAL_SEM_CLI_RESOURCE_ZIP}] specified using CLI_RESOURCE_ZIP doesn't exist !")
+     set(LOCAL_SEM_CLI_RESOURCE_ZIP)
+  endif()
+
   set(CLP ${LOCAL_SEM_NAME})
 
   # SlicerExecutionModel
@@ -111,7 +117,7 @@ macro(SEMMacroBuildCLI)
   if(DEFINED LOCAL_SEM_INCLUDE_DIRECTORIES)
     include_directories(${LOCAL_SEM_INCLUDE_DIRECTORIES})
   endif()
-  
+
   if(DEFINED SlicerExecutionModel_EXTRA_INCLUDE_DIRECTORIES)
     include_directories(${SlicerExecutionModel_EXTRA_INCLUDE_DIRECTORIES})
   endif()
@@ -165,7 +171,7 @@ macro(SEMMacroBuildCLI)
 
   # Set labels associated with the target.
   set_target_properties(${cli_targets} PROPERTIES LABELS ${CLP})
-  
+
   # Define default Output directories if it applies
   foreach(type RUNTIME LIBRARY ARCHIVE)
     if(NOT DEFINED LOCAL_SEM_${type}_OUTPUT_DIRECTORY)
@@ -185,6 +191,19 @@ macro(SEMMacroBuildCLI)
     LIBRARY_OUTPUT_DIRECTORY "${LOCAL_SEM_LIBRARY_OUTPUT_DIRECTORY}"
     ARCHIVE_OUTPUT_DIRECTORY "${LOCAL_SEM_ARCHIVE_OUTPUT_DIRECTORY}"
     )
+
+
+  if(DEFINED LOCAL_SEM_CLI_RESOURCE_ZIP)
+    # Create a dependency between the resource zip file and CLP target. If the zip file is updated, we need to
+    # re-concatenate the zip to the target but we must start from a clean target. So force the target to re-build
+    # (TODO: only force a re-link of the target).
+    set_source_files_properties(${CLP} OBJECT_DEPENDS ${LOCAL_SEM_CLI_RESOURCE_ZIP} )
+    # Insert the resource zip at the end of the CLP target. The CLP will be able access the resource zip using
+    # libzip on argv[0]
+    get_target_property(${CLP}_LOCATION ${CLP} LOCATION)
+    add_custom_command(TARGET ${CLP} POST_BUILD COMMAND ${ATTACHCLPRESOURCE_EXE} ARGS ${LOCAL_SEM_CLI_RESOURCE_ZIP} ${${CLP}_LOCATION} )
+  endif()
+
 
   if(NOT LOCAL_SEM_NO_INSTALL)
     # Define default install destination if it applies

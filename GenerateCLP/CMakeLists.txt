@@ -50,7 +50,7 @@ foreach(type LIBRARY RUNTIME ARCHIVE)
      AND NOT EXISTS ${GenerateCLP_CMAKE_${type}_OUTPUT_DIRECTORY})
     message(FATAL_ERROR "GenerateCLP_CMAKE_${type}_OUTPUT_DIRECTORY is set to a non-existing directory [${GenerateCLP_CMAKE_${type}_OUTPUT_DIRECTORY}]")
   endif()
-  
+
   if(NOT DEFINED GenerateCLP_CMAKE_${type}_OUTPUT_DIRECTORY)
     set(GenerateCLP_CMAKE_${type}_OUTPUT_DIRECTORY ${GenerateCLP_BINARY_DIR}/bin)
   endif()
@@ -92,6 +92,9 @@ target_link_libraries(${executable_name}
   itksys
   ITKEXPAT)
 
+add_executable(AttachCLPResource AttachCLPResource.cxx)
+list(APPEND targets_to_export AttachCLPResource)
+
 # --------------------------------------------------------------------------
 # Install executable
 # --------------------------------------------------------------------------
@@ -102,7 +105,7 @@ if(NOT DEFINED ${PROJECT_NAME}_INSTALL_NO_DEVELOPMENT)
   set(${PROJECT_NAME}_INSTALL_NO_DEVELOPMENT ON)
 endif()
 if(NOT ${PROJECT_NAME}_INSTALL_NO_DEVELOPMENT)
-  install(TARGETS GenerateCLP RUNTIME
+  install(TARGETS GenerateCLP AttachCLPResource RUNTIME
     DESTINATION ${GenerateCLP_INSTALL_BIN_DIR} COMPONENT Development
     )
 endif()
@@ -180,7 +183,7 @@ set(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BIN
 
 # --------------------------------------------------------------------------
 # Configure support files
-# --------------------------------------------------------------------------  
+# --------------------------------------------------------------------------
 configure_file(
   GenerateCLP.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/GenerateCLP.cmake

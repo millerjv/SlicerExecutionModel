@@ -51,7 +51,7 @@ endforeach()
 
 #-----------------------------------------------------------------------------
 # Note: The default values defined below could be overwritten if passed when configuring
-#       SlicerExecutionModel project. 
+#       SlicerExecutionModel project.
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ endif()
 # Define default "cli library wrapper" used by SEMMacroBuildCLI.cmake
 #-----------------------------------------------------------------------------
 if(NOT DEFINED SlicerExecutionModel_DEFAULT_CLI_LIBRARY_WRAPPER_CXX)
-  set(SlicerExecutionModel_DEFAULT_CLI_LIBRARY_WRAPPER_CXX 
+  set(SlicerExecutionModel_DEFAULT_CLI_LIBRARY_WRAPPER_CXX
     ${CMAKE_CURRENT_SOURCE_DIR}/CMake/SEMCommandLineLibraryWrapper.cxx)
 endif()
 
@@ -152,3 +152,10 @@ foreach(SCRIPT  ${allscripts})
   configure_file(${SCRIPT}
     ${CMAKE_CURRENT_BINARY_DIR}/CMake/${_fileName} COPYONLY IMMEDIATE)
 endforeach()
+
+# --------------------------------------------------------------------------
+# Testing
+#
+if(BUILD_TESTING)
+  add_subdirectory(Testing)
+endif()
