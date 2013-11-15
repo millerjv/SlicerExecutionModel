@@ -198,10 +198,13 @@ macro(SEMMacroBuildCLI)
     # re-concatenate the zip to the target but we must start from a clean target. So force the target to re-build
     # (TODO: only force a re-link of the target).
     set_source_files_properties(${CLP} OBJECT_DEPENDS ${LOCAL_SEM_CLI_RESOURCE_ZIP} )
+    set_source_files_properties(${CLP}Lib OBJECT_DEPENDS ${LOCAL_SEM_CLI_RESOURCE_ZIP} )
     # Insert the resource zip at the end of the CLP target. The CLP will be able access the resource zip using
     # libzip on argv[0]
     get_target_property(${CLP}_LOCATION ${CLP} LOCATION)
     add_custom_command(TARGET ${CLP} POST_BUILD COMMAND ${ATTACHCLPRESOURCE_EXE} ARGS ${LOCAL_SEM_CLI_RESOURCE_ZIP} ${${CLP}_LOCATION} )
+    get_target_property(${CLP}Lib_LOCATION ${CLP}Lib LOCATION)
+    add_custom_command(TARGET ${CLP}Lib POST_BUILD COMMAND ${ATTACHCLPRESOURCE_EXE} ARGS ${LOCAL_SEM_CLI_RESOURCE_ZIP} ${${CLP}Lib_LOCATION} )
   endif()
 
 
